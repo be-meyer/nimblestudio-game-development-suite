@@ -188,15 +188,11 @@ class IncredibuildWorkers(Construct):
         # Download the Incredibuild silent installer
         incredibuild_installer_local_path = r"C:\temp\IBSetupConsole.exe"
 
-        self._user_data.add_commands(
-            f'if (-Not (Test-Path "C:\\temp")) {{ New-Item "C:\\temp" -ItemType Directory }}'
-        )
-
-        self._user_data.add_commands(
-            f'wget -Uri "{incredibuild_installer_location}" -Outfile "{incredibuild_installer_local_path}"'
-        )
-
         # Install Incredibuild, and then configure it to connect to the coordinator
         self._user_data.add_commands(
-            f'{incredibuild_installer_local_path} /install /Components=Agent /Coordinator="{coordinator_domain_name}"'
+            f"""
+if (-Not (Test-Path "C:\\temp")) {{ New-Item "C:\\temp" -ItemType Directory }}
+wget -Uri "{incredibuild_installer_location}" -Outfile "{incredibuild_installer_local_path}"
+{incredibuild_installer_local_path} /install /Components=Agent /Coordinator="{coordinator_domain_name}"
+"""
         )
